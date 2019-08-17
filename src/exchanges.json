@@ -1,0 +1,10 @@
+{
+    "deribit": {
+        "tickers": {
+            "supported": [
+                "BTC-PERPETUAL",
+                "ETH-PERPETUAL"
+            ]
+        }
+    }
+}

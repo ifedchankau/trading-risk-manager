@@ -25,3 +25,17 @@ def find_order_levels(price_ranges, order_probabilities):
 
     price_levels = []
     return price_levels
+
+
+def get_candle_properties(hold_time):
+    """
+    Todo: realize function (issue #11)
+    """
+
+    candle_properties = {
+        'resolution': 0,
+        'amount': 0,
+        'start_time': 0,
+        'end_time': 0
+    }
+    return candle_properties
