@@ -1,8 +1,9 @@
 import src.errors as errors
+import os
 import json
 
 
-def validate_market_price_data(data, candles_amount):
+def validate_candlestick_price_data(data, candles_amount):
     """Validates candlestick market price data
 
     :param (dict of str: list) data: candlestick market price data
@@ -11,16 +12,17 @@ def validate_market_price_data(data, candles_amount):
     :raises ValueError: invalid market price data
     """
 
-    required_fields = ['ticks', 'open', 'high', 'low', 'close']
+    required_keys = ['ticks', 'open', 'high', 'low', 'close']
     if type(data) is not dict:
         errors.market_data_type_invalid()
-    for field in required_fields:
+    for field in required_keys:
         if field not in data:
             errors.market_data_not_have_key(field)
         if len(data[field]) == 0:
-            errors.market_data_empty()
+            errors.market_data_empty(field)
         if len(data[field]) != candles_amount:
             errors.market_data_key_size_invalid(field, candles_amount, len(data[field]))
+    return True
 
 
 def validate_exchange_name(exchange):
@@ -30,9 +32,11 @@ def validate_exchange_name(exchange):
     :raises ValueError: invalid exchange name
     """
 
-    exchanges = json.load(open('./exchanges.json'))
+    # TODO: fix
+    exchanges = json.load(open(os.path.dirname(__file__) + '/exchanges.json'))
     if exchange not in exchanges:
         errors.exchange_name_invalid(exchange)
+    return True
 
 
 def validate_instrument_ticker(exchange, ticker):
@@ -43,6 +47,10 @@ def validate_instrument_ticker(exchange, ticker):
     :raises ValueError: invalid or unsupported instrument ticker
     """
 
-    exchanges = json.load(open('./exchanges.json'))
+    # TODO: fix
+    exchanges = json.load(open(os.path.dirname(__file__) + '/exchanges.json'))
+    if exchange not in exchanges:
+        errors.exchange_name_invalid(exchange)
     if ticker not in exchanges[exchange]['tickers']['supported']:
         errors.instrument_ticker_invalid(ticker)
+    return True
