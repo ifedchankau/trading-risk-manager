@@ -3,6 +3,10 @@ language: python
 python:
   - "3.7"
 
+before_install:
+  - git clone https://github.com/ifedchankau/deribit-api-clients.git
+  - pip install ./deribit-api-clients/python
+
 install:
   - pip install -r requirements.txt
 

@@ -1,2 +1,1 @@
 pytest
-https://github.com/ifedchankau/deribit-api-clients
