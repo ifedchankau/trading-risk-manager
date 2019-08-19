@@ -24,10 +24,16 @@ def calculate_position(
     validator.validate_instrument_ticker(exchange, instrument_ticker)
 
     candle_properties = tools.get_candle_properties(min_hold_time)
+    range_period_size = tools.get_range_period_size(min_hold_time)
     market_data = api.fetch_candlestick_price_data(exchange, instrument_ticker, candle_properties)
+    validator.validate_candlestick_price_data(market_data)
+    price_ranges_min_time = tools.find_price_ranges(market_data, range_period_size)
 
     candle_properties = tools.get_candle_properties(max_hold_time)
+    range_period_size = tools.get_range_period_size(max_hold_time)
     market_data = api.fetch_candlestick_price_data(exchange, instrument_ticker, candle_properties)
+    validator.validate_candlestick_price_data(market_data)
+    price_ranges_max_time = tools.find_price_ranges(market_data, range_period_size)
 
     position = {
         'stop-loss': [],
