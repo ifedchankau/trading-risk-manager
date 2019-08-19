@@ -30,8 +30,19 @@ def find_order_levels(price_ranges, order_probabilities):
     :return (list of float) price_levels: price levels of orders
     """
 
-    price_levels = []
-    return price_levels
+    probability_step = 1 / len(price_ranges)
+    order_levels = []
+    for fill_probability in order_probabilities:
+        if fill_probability < probability_step:
+            order_levels.append(0)
+            continue
+        range_index = len(price_ranges) - fill_probability / probability_step
+        range_index_int_part = int(range_index)
+        range_index_double_part = range_index - range_index_int_part
+        level = price_ranges[range_index_int_part] + (price_ranges[range_index_int_part + 1] -
+                                                      price_ranges[range_index_int_part]) * range_index_double_part
+        order_levels.append(level)
+    return order_levels
 
 
 def get_candle_properties(hold_time):

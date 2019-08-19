@@ -18,3 +18,17 @@ class TestFindPriceRanges:
     def test_valid(self):
         """Passing test. Expected: real ranges == expected ranges"""
         assert self.expected_ranges == tools.find_price_ranges(self.candlestick_data_default, self.period_size_default)
+
+
+class TestFindOrderLevels:
+    """Tests for find_order_levels function"""
+    price_ranges_default = [0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.06, 0.08, 0.09]
+    probabilities_default = [0.00001, 0.101, 0.2, 0.999, 0.44]
+    expected_price_levels = [0, 0.0899, 0.08, 0.00109, 0.056]
+
+    def test_valid(self):
+        """Passing test. Expected: real price levels == expected levels"""
+        real_price_levels = [round(level, 5) for level in
+                             tools.find_order_levels(self.price_ranges_default, self.probabilities_default)]
+        assert self.expected_price_levels == real_price_levels
+
