@@ -3,25 +3,28 @@ import os
 import json
 
 
-def validate_candlestick_price_data(data, candles_amount):
+def validate_candlestick_price_data(data):
     """Validates candlestick market price data
 
     :param (dict of str: list) data: candlestick market price data
-    :param int candles_amount: expected number of candles in data
     :raises TypeError: market price data type is not a dictionary
     :raises ValueError: invalid market price data
     """
 
-    required_keys = ['ticks', 'open', 'high', 'low', 'close']
+    required_keys = ['ticks', 'open', 'high', 'low', 'close', 'length']
+    price_keys = ['ticks', 'open', 'high', 'low', 'close']
     if type(data) is not dict:
         errors.market_data_type_invalid()
     for field in required_keys:
         if field not in data:
             errors.market_data_not_have_key(field)
+
+    length = data['length']
+    for field in price_keys:
         if len(data[field]) == 0:
             errors.market_data_empty(field)
-        if len(data[field]) != candles_amount:
-            errors.market_data_key_size_invalid(field, candles_amount, len(data[field]))
+        if len(data[field]) != length:
+            errors.market_data_key_size_invalid(field, length, len(data[field]))
     return True
 
 

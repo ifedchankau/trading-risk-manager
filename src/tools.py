@@ -1,4 +1,4 @@
-def find_price_ranges(market_price_data, period_size_bars):
+def find_price_ranges(candlestick_data, period_size):
     """Calculates historical price ranges for a given period duration.
 
     For one period of bars ranges counts as:
@@ -6,13 +6,20 @@ def find_price_ranges(market_price_data, period_size_bars):
     2nd range: (first bar opening price - low price in period) / first bar opening price - 1
     The next period is obtained by a shift of always 1 bar.
 
-    :param (dict of str: list) market_price_data: candlestick market price data (required)
-    :param int period_size_bars: size of one period in bars (required)
+    :param (dict of str: list) candlestick_data: candlestick market price data (required)
+    :param int period_size: size of one period in bars (required)
     :return (list of float) price_ranges: all price ranges in market price data
     """
 
     price_ranges = []
-    return price_ranges
+    for candle_index in range(candlestick_data['length'] - period_size + 1):
+        period_open = candlestick_data['open'][candle_index]
+        max_high = max(candlestick_data['high'][candle_index: candle_index + period_size])
+        min_low = min(candlestick_data['low'][candle_index: candle_index + period_size])
+        price_ranges.append(max_high / period_open - 1)
+        price_ranges.append(1 - min_low / period_open)
+    print(sorted(price_ranges))
+    return sorted(price_ranges)
 
 
 def find_order_levels(price_ranges, order_probabilities):
@@ -39,3 +46,12 @@ def get_candle_properties(hold_time):
         'end_time': 0
     }
     return candle_properties
+
+
+def get_range_period_size(hold_time):
+    """
+    Todo: realize function (issue #11)
+    """
+
+    period_size = 0
+    return period_size
