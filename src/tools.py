@@ -22,12 +22,12 @@ def find_price_ranges(candlestick_data, period_size):
     return sorted(price_ranges)
 
 
-def find_order_levels(price_ranges, order_probabilities):
-    """Calculates orders price levels with given filling probability depending on historical market volatility
+def find_order_relative_levels(price_ranges, order_probabilities):
+    """Calculates orders relative levels with given filling probability depending on historical market volatility
 
     :param (list of float) price_ranges: historical price ranges (required)
     :param (list of float) order_probabilities: order filling probabilities (required)
-    :return (list of float) price_levels: price levels of orders
+    :return (list of float) order_levels: relative levels of orders
     """
 
     probability_step = 1 / len(price_ranges)
@@ -43,6 +43,22 @@ def find_order_levels(price_ranges, order_probabilities):
                                                       price_ranges[range_index_int_part]) * range_index_double_part
         order_levels.append(level)
     return order_levels
+
+
+def find_order_price_levels(base_price, relative_levels, direction):
+    """Calculates order price levels by base price and relative order levels
+
+    :param float base_price: base price for order price level calculating (f.e. current market price)
+    :param (list of float) relative_levels: relative order levels
+    :param str direction: `higher` for orders above base_price or `lower` for orders below base_price
+    :return (list of float) price_levels: price levels of orders
+    """
+
+    direction_int = 1 if direction == 'higher' else -1
+    price_levels = []
+    for level in relative_levels:
+        price_levels.append(base_price * (1 + level * direction_int))
+    return price_levels
 
 
 def get_candle_properties(hold_time):
