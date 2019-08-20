@@ -24,11 +24,33 @@ class TestFindOrderLevels:
     """Tests for find_order_levels function"""
     price_ranges_default = [0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.06, 0.08, 0.09]
     probabilities_default = [0.00001, 0.101, 0.2, 0.999, 0.44]
-    expected_price_levels = [0, 0.0899, 0.08, 0.00109, 0.056]
+    expected_relative_levels = [0, 0.0899, 0.08, 0.00109, 0.056]
 
     def test_valid(self):
         """Passing test. Expected: real price levels == expected levels"""
-        real_price_levels = [round(level, 5) for level in
-                             tools.find_order_levels(self.price_ranges_default, self.probabilities_default)]
-        assert self.expected_price_levels == real_price_levels
+        real_relative_levels = [round(level, 5) for level in
+                             tools.find_order_relative_levels(self.price_ranges_default, self.probabilities_default)]
+        assert self.expected_relative_levels == real_relative_levels
 
+
+class TestFindOrderPriceLevels:
+    """Tests for find_order_price_levels function"""
+    base_price_default = 100
+    relative_levels_default = [0, 0.00001, 0.1, 0.5, 1, 1.5]
+    direction_default = 'higher'
+    expected_price_levels_default = [100, 100.001, 110, 150, 200, 250]
+
+    def test_higher_valid(self):
+        """Passing test for higher direction"""
+        real_price_levels = [round(level, 5) for level in tools.find_order_price_levels(
+            self.base_price_default, self.relative_levels_default, self.direction_default)]
+        assert self.expected_price_levels_default == real_price_levels
+
+
+    def test_lower_valid(self):
+        """Passing test for lower direction"""
+        direction = 'lower'
+        expected_price_levels = [100, 99.999, 90, 50, 0, -50]
+        real_price_levels = [round(level, 5) for level in tools.find_order_price_levels(
+            self.base_price_default, self.relative_levels_default, direction)]
+        assert expected_price_levels == real_price_levels
